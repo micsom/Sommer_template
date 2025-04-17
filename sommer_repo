@@ -1,0 +1,109 @@
+name: Sommer's Repository Template
+
+description: |
+  A universal, automated GitHub repository template that applies best practices and process for security, structure, and CI/CD.
+
+# Repository Settings (requires Pro/Enterprise or GitHub App)
+settings:
+  default_branch: main
+  allow_merge_commit: false
+  allow_squash_merge: true
+  allow_rebase_merge: false
+  delete_branch_on_merge: true
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+
+# CODEOWNERS
+codeowners:
+  - path: "*"
+    owners:
+      - "@micsom/admins"
+
+# .gitignore
+.gitignore: |
+  node_modules/
+  dist/
+  .env
+  __pycache__/
+  *.log
+
+# LICENSE
+license: MIT
+
+# README.md
+readme: |
+  # Project Title
+
+  One-liner about the project.
+
+  ## Features
+  - Security defaults
+  - Pre-configured workflows
+  - Ready for CI/CD
+
+  ## Getting Started
+  Clone, install dependencies, and run your app.
+
+# CONTRIBUTING.md
+contributing: |
+  ## How to Contribute
+  - Fork the repo
+  - Create a feature branch
+  - Commit with conventional commits
+  - Open a PR
+
+# SECURITY.md
+security: |
+  ## Security Policy
+  Please report vulnerabilities to [security@michaelsommer.dev](mailto:security@michaelsommer.dev).
+
+# DEPENDENCY REVIEW ACTION
+.github/workflows/dependency-review.yml: |
+  name: Dependency Review
+  on: [pull_request]
+  jobs:
+    review:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/dependency-review-action@v3
+
+# PR VALIDATION ACTION
+.github/workflows/pr-check.yml: |
+  name: Pull Request Check
+  on:
+    pull_request:
+      branches: [main]
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: Run Linter
+          run: echo "Add your linter command here"
+        - name: Test
+          run: echo "Add your test runner here"
+
+# Repo Initialization Script
+init_script.sh: |
+  #!/bin/bash
+  set -e
+
+  REPO_NAME=$1
+  ORG=$2
+  DESCRIPTION="sommer_repo"
+
+  echo "Creating repo $REPO_NAME under org $ORG"
+
+  gh repo create "$ORG/$REPO_NAME" \
+    --private \
+    --description "$DESCRIPTION" \
+    --template your-org/sommer_repo \
+    --enable-issues \
+    --enable-actions \
+    --clone
+
+  cd $REPO_NAME
+  git remote add upstream "https://github.com/your-org/sommer_repop.git"
+  echo "Repo $REPO_NAME initialized and ready."
